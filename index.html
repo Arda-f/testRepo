@@ -1,15 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket İstemcisi</title>
 </head>
 <body>
-    <h1>Bu sayfa github pages ile görüntüleniyor.</h1>
+  <h1>WebSocket İstemcisi</h1>
+  <button id="sendMessage">Mesaj Gönder</button>
+  <p id="messages"></p>
 
-    <script>
-        console.log("scripted")
-    </script>
+  <script>
+    // WebSocket sunucusuna bağlan
+    const ws = new WebSocket('ws://localhost:8080');
+
+    // Bağlantı açıldığında
+    ws.onopen = () => {
+      console.log('WebSocket bağlantısı kuruldu');
+    };
+
+    // Sunucudan mesaj alındığında
+    ws.onmessage = event => {
+      const messages = document.getElementById('messages');
+      messages.innerHTML += `<p>${event.data}</p>`;
+    };
+
+    // Hata oluştuğunda
+    ws.onerror = error => {
+      console.error('WebSocket hatası:', error);
+    };
+
+    // Bağlantı kapandığında
+    ws.onclose = () => {
+      console.log('WebSocket bağlantısı kapandı');
+    };
+
+    // Mesaj gönderme butonuna tıklama olayını dinle
+    document.getElementById('sendMessage').addEventListener('click', () => {
+      const message = 'Merhaba Sunucu!';
+      ws.send(message);
+      console.log('Mesaj gönderildi:', message);
+    });
+  </script>
 </body>
 </html>
